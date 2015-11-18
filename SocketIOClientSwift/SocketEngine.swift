@@ -582,9 +582,15 @@ extension SocketEngine {
         
         req.HTTPBody = postData
         req.setValue(String(postData.length), forHTTPHeaderField: "Content-Length")
-        
+		
+		if let extraHeaders = extraHeaders {
+			for (headerName, value) in extraHeaders {
+				req.setValue(value, forHTTPHeaderField: headerName)
+			}
+		}
+		
         waitingForPost = true
-        
+		
         DefaultSocketLogger.Logger.log("POSTing: %@", type: logType, args: postStr)
         
         doRequest(req) {[weak self] data, res, err in
